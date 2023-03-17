@@ -2,12 +2,29 @@ package arvancloud
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 )
 
 type DNSRecord struct {
+	ID               string      `json:"id,omitempty"`
+	Type             string      `json:"type,omitempty"`
+	Name             string      `json:"name,omitempty"`
+	Value            interface{} `json:"value,omitempty"`
+	TTL              int         `json:"ttl,omitempty"`
+	Cloud            bool        `json:"cloud,omitempty"`
+	UpstreamHTTPS    string      `json:"upstream_https,omitempty"`
+	IPFilterMode     interface{} `json:"ip_filter_mode,omitempty"`
+	IsProtected      bool        `json:"is_protected,omitempty"`
+	CreatedAt        string      `json:"created_at,omitempty"`
+	UpdatedAt        string      `json:"updated_at,omitempty"`
+	MonitoringStatus string      `json:"monitoring_status,omitempty"`
+	HealthCheck      interface{} `json:"health_check,omitempty"`
+}
+
+type CreateDNSRecordParams struct {
 	Type          string      `json:"type,omitempty"`
 	Name          string      `json:"name,omitempty"`
 	Value         interface{} `json:"value,omitempty"`
@@ -84,14 +101,18 @@ type DNSRecord_IPFilterMode struct {
 	GeoFilter string `json:"geo_filter,omitempty"`
 }
 
-type DNSRecord_Response struct {
+type CreateDNSRecord_Response struct {
 	Message string              `json:"message,omitempty"`
 	Status  bool                `json:"status,omitempty"`
 	Errors  map[string][]string `json:"errors,omitempty"`
 	Data    interface{}         `json:"data,omitempty"`
 }
 
-func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, record DNSRecord) (*DNSRecord_Response, error) {
+type DNSRecord_Response struct {
+	Data DNSRecord `json:"data,omitempty"`
+}
+
+func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, record CreateDNSRecordParams) (*CreateDNSRecord_Response, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
 	}
@@ -102,12 +123,18 @@ func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 		return nil, err
 	}
 
-	return response, nil
+	res := &CreateDNSRecord_Response{}
+	err = json.Unmarshal(response, &res)
+	if err != nil {
+		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
+	}
+
+	return res, nil
 }
 
 var ErrMissingDNSRecordID = errors.New("required DNS record ID missing")
 
-func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DNSRecord_Response, error) {
+func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DNSRecord, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
 	}
@@ -122,5 +149,11 @@ func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID
 		return nil, err
 	}
 
-	return response, nil
+	res := &DNSRecord_Response{}
+	err = json.Unmarshal(response, &res)
+	if err != nil {
+		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
+	}
+
+	return &res.Data, nil
 }

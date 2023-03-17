@@ -82,7 +82,7 @@ func New(token string, opts ...Option) (*API, error) {
 	return api, nil
 }
 
-func (api *API) makeRequestContext(ctx context.Context, method, uri string, record interface{}) (*DNSRecord_Response, error) {
+func (api *API) makeRequestContext(ctx context.Context, method, uri string, record interface{}) ([]byte, error) {
 	res, err := api.makeRequest(ctx, method, uri, record)
 
 	if err != nil {
@@ -92,7 +92,7 @@ func (api *API) makeRequestContext(ctx context.Context, method, uri string, reco
 	return res, err
 }
 
-func (api *API) makeRequest(ctx context.Context, method, uri string, record interface{}) (*DNSRecord_Response, error) {
+func (api *API) makeRequest(ctx context.Context, method, uri string, record interface{}) ([]byte, error) {
 	var err error
 	var resp *http.Response
 	var respErr error
@@ -182,7 +182,7 @@ func (api *API) makeRequest(ctx context.Context, method, uri string, record inte
 			}}
 		}
 
-		errBody := &DNSRecord_Response{}
+		errBody := &CreateDNSRecord_Response{}
 		err = json.Unmarshal(respBody, &errBody)
 		if err != nil {
 
@@ -199,13 +199,7 @@ func (api *API) makeRequest(ctx context.Context, method, uri string, record inte
 		return nil, &RequestError{arvancloudError: err}
 	}
 
-	response := &DNSRecord_Response{}
-	err = json.Unmarshal(respBody, &response)
-	if err != nil {
-		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
-	}
-
-	return response, nil
+	return respBody, nil
 }
 
 func (api *API) request(ctx context.Context, method, uri string, reqBody io.Reader) (*http.Response, error) {
