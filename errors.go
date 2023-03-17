@@ -6,15 +6,20 @@ import (
 )
 
 const (
-	errEmptyAPIToken        = "invalid credentials: API Token must not be empty"
-	errMissingDomain        = "required missing domain"
-	errUnmarshalError       = "error unmarshalling the JSON response"
+	errEmptyAPIToken = "invalid credentials: API Token must not be empty"
+
+	errMissingDomain      = "required missing domain"
+	errMissingDNSRecordID = "required DNS record ID missing"
+
+	errUnmarshalError     = "error unmarshalling the JSON response"
+	errUnmarshalErrorBody = "error unmarshalling the JSON response error body"
+
 	errInternalServiceError = "internal service error"
-	errUnmarshalErrorBody   = "error unmarshalling the JSON response error body"
 )
 
 var (
-	ErrMissingDomain = errors.New(errMissingDomain)
+	ErrMissingDomain      = errors.New(errMissingDomain)
+	ErrMissingDNSRecordID = errors.New(errMissingDNSRecordID)
 )
 
 type ErrorType string
