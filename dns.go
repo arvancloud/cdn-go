@@ -2,6 +2,7 @@ package arvancloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -97,6 +98,26 @@ func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 
 	uri := fmt.Sprintf("/domains/%s/dns-records", rc.Domain)
 	response, err := api.makeRequestContext(ctx, http.MethodPost, uri, record)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+var ErrMissingDNSRecordID = errors.New("required DNS record ID missing")
+
+func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DNSRecord_Response, error) {
+	if rc.Domain == "" {
+		return nil, ErrMissingDomain
+	}
+
+	if recordID == "" {
+		return nil, ErrMissingDNSRecordID
+	}
+
+	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
+	response, err := api.makeRequestContext(ctx, http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
