@@ -33,6 +33,8 @@ type CreateDNSRecordParams struct {
 	IPFilterMode  interface{} `json:"ip_filter_mode,omitempty"`
 }
 
+type UpdateDNSRecordParams = CreateDNSRecordParams
+
 type DNSRecord_Value_A struct {
 	IP      string `json:"ip,omitempty"`
 	Port    int    `json:"port,omitempty"`
@@ -106,6 +108,8 @@ type CreateDNSRecord_Response struct {
 	Errors  map[string][]string `json:"errors,omitempty"`
 	Data    interface{}         `json:"data,omitempty"`
 }
+
+type UpdateDNSRecord_Response = CreateDNSRecord_Response
 
 type DNSRecord_Response struct {
 	Data DNSRecord `json:"data,omitempty"`
@@ -190,4 +194,28 @@ func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params
 	}
 
 	return listResponse.Data, nil
+}
+
+func (api *API) UpdateDNSRecord(ctx context.Context, rc ResourceContainer, recordID string, params UpdateDNSRecordParams) (*UpdateDNSRecord_Response, error) {
+	if rc.Domain == "" {
+		return nil, ErrMissingDomain
+	}
+
+	if recordID == "" {
+		return nil, ErrMissingDNSRecordID
+	}
+
+	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
+	response, err := api.makeRequestContext(ctx, http.MethodPut, uri, params)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &UpdateDNSRecord_Response{}
+	err = json.Unmarshal(response, &res)
+	if err != nil {
+		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
+	}
+
+	return res, nil
 }
