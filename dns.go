@@ -111,6 +111,19 @@ type DNSRecord_Response struct {
 	Data DNSRecord `json:"data,omitempty"`
 }
 
+type ListDNSRecordsParams struct {
+	Search  string `url:"search,omitempty"`
+	Type    string `url:"type,omitempty"`
+	Page    int    `url:"page,omitempty"`
+	PerPage int    `url:"per_page,omitempty"`
+}
+
+type DNSListResponse struct {
+	Data  []DNSRecord `json:"data"`
+	Meta  interface{} `json:"meta,omitempty"`
+	Links interface{} `json:"links,omitempty"`
+}
+
 func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, record CreateDNSRecordParams) (*CreateDNSRecord_Response, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
@@ -153,4 +166,28 @@ func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID
 	}
 
 	return &res.Data, nil
+}
+
+func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params ListDNSRecordsParams) ([]DNSRecord, error) {
+	if rc.Domain == "" {
+		return nil, ErrMissingDomain
+	}
+
+	if params.Page < 1 {
+		params.Page = 1
+	}
+
+	uri := buildURI(fmt.Sprintf("/domains/%s/dns-records", rc.Domain), params)
+	res, err := api.makeRequestContext(ctx, http.MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var listResponse DNSListResponse
+	err = json.Unmarshal(res, &listResponse)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", errUnmarshalError, err)
+	}
+
+	return listResponse.Data, nil
 }
