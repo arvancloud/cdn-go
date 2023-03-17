@@ -111,6 +111,8 @@ type CreateDNSRecord_Response struct {
 
 type UpdateDNSRecord_Response = CreateDNSRecord_Response
 
+type DeleteDNSRecord_Response = CreateDNSRecord_Response
+
 type DNSRecord_Response struct {
 	Data DNSRecord `json:"data,omitempty"`
 }
@@ -212,6 +214,30 @@ func (api *API) UpdateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	}
 
 	res := &UpdateDNSRecord_Response{}
+	err = json.Unmarshal(response, &res)
+	if err != nil {
+		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
+	}
+
+	return res, nil
+}
+
+func (api *API) DeleteDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DeleteDNSRecord_Response, error) {
+	if rc.Domain == "" {
+		return nil, ErrMissingDomain
+	}
+
+	if recordID == "" {
+		return nil, ErrMissingDNSRecordID
+	}
+
+	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
+	response, err := api.makeRequestContext(ctx, http.MethodDelete, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &DeleteDNSRecord_Response{}
 	err = json.Unmarshal(response, &res)
 	if err != nil {
 		return nil, fmt.Errorf(errUnmarshalError+": %w", err)
