@@ -66,7 +66,7 @@ func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params
 		return nil, err
 	}
 
-	var listResponse DNSListResponse
+	var listResponse ListDNSRecord_Response
 	err = json.Unmarshal(res, &listResponse)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", errUnmarshalError, err)

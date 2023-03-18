@@ -141,9 +141,9 @@ type ListDNSRecordsParams struct {
 	PerPage int    `url:"per_page,omitempty"`
 }
 
-// DNSListResponse is a response structure when listing
+// ListDNSRecord_Response is a response structure when listing
 // DNS records of a domain
-type DNSListResponse struct {
+type ListDNSRecord_Response struct {
 	Data  []DNSRecord `json:"data"`
 	Meta  interface{} `json:"meta,omitempty"`
 	Links interface{} `json:"links,omitempty"`
