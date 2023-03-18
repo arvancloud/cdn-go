@@ -15,7 +15,7 @@ func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	}
 
 	uri := fmt.Sprintf("/domains/%s/dns-records", rc.Domain)
-	response, err := api.makeRequestContext(ctx, http.MethodPost, uri, record)
+	response, err := api.makeRequest(ctx, http.MethodPost, uri, record)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID
 	}
 
 	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
-	response, err := api.makeRequestContext(ctx, http.MethodGet, uri, nil)
+	response, err := api.makeRequest(ctx, http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params
 	}
 
 	uri := buildURI(fmt.Sprintf("/domains/%s/dns-records", rc.Domain), params)
-	res, err := api.makeRequestContext(ctx, http.MethodGet, uri, nil)
+	res, err := api.makeRequest(ctx, http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (api *API) UpdateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	}
 
 	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
-	response, err := api.makeRequestContext(ctx, http.MethodPut, uri, params)
+	response, err := api.makeRequest(ctx, http.MethodPut, uri, params)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (api *API) DeleteDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	}
 
 	uri := fmt.Sprintf("/domains/%s/dns-records/%s", rc.Domain, recordID)
-	response, err := api.makeRequestContext(ctx, http.MethodDelete, uri, nil)
+	response, err := api.makeRequest(ctx, http.MethodDelete, uri, nil)
 	if err != nil {
 		return nil, err
 	}
