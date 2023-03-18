@@ -9,7 +9,7 @@ import (
 
 // CreateDNSRecord will create a DNS record
 // ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.store
-func (api *API) CreateDNSRecord(ctx context.Context, resource Resource, record CreateDNSRecordParams) (*CreateDNSRecord_Response, error) {
+func (api *API) CreateDNSRecord(ctx context.Context, resource Resource, record CreateDNSRecordParams) (res *CreateDNSRecord_Response, err error) {
 	if resource.Domain == "" {
 		return nil, ErrMissingDomain
 	}
@@ -20,7 +20,7 @@ func (api *API) CreateDNSRecord(ctx context.Context, resource Resource, record C
 		return nil, err
 	}
 
-	res := &CreateDNSRecord_Response{}
+	res = &CreateDNSRecord_Response{}
 	err = json.Unmarshal(response, &res)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", errUnmarshalError, err)

@@ -41,9 +41,27 @@ type Logger interface {
 	Printf(format string, v ...interface{})
 }
 
+// New creates a new instance of the API client with the given API token and options.
+func New(token string, opts ...Option) (*API, error) {
+	if token == "" {
+		return nil, errors.New(errEmptyAPIToken)
+	}
+
+	api, err := newClient(opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	api.APIKey = token
+
+	return api, nil
+}
+
 func newClient(opts ...Option) (*API, error) {
+	// Create a logger that discards all log output
 	silentLogger := log.New(io.Discard, "", log.LstdFlags)
 
+	// Create a new API object with default values
 	api := &API{
 		BaseURL:     fmt.Sprintf("%s://%s%s", SCHEME, HOST_NAME, BASE_PATH),
 		UserAgent:   UA + "/" + VERSION,
@@ -57,27 +75,14 @@ func newClient(opts ...Option) (*API, error) {
 		logger: silentLogger,
 	}
 
+	// Parse the options and apply them to the API object
 	err := api.parseOptions(opts...)
 	if err != nil {
 		return nil, fmt.Errorf("options parsing failed: %w", err)
 	}
 
+	// Create a new HTTP client using the default client
 	api.httpClient = http.DefaultClient
-
-	return api, nil
-}
-
-func New(token string, opts ...Option) (*API, error) {
-	if token == "" {
-		return nil, errors.New(errEmptyAPIToken)
-	}
-
-	api, err := newClient(opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	api.APIKey = token
 
 	return api, nil
 }
@@ -240,8 +245,11 @@ func (api *API) request(ctx context.Context, method, uri string, reqBody io.Read
 	return resp, nil
 }
 
+// copyHeader copies all header fields and their values from the source header to the target header.
 func copyHeader(target, source http.Header) {
+	// Iterate over all header fields in the source header.
 	for k, vs := range source {
+		// Copy the header field and its values to the target header.
 		target[k] = vs
 	}
 }

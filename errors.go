@@ -56,17 +56,25 @@ func (e Error) Error() string {
 		m += e.Message
 	}
 
+	// Append the main error message to the slice of error messages
 	errMessages = append(errMessages, m)
 
 	errors := []string{}
+
+	// Loop through each error in the Errors slice
+	// Join them into a comma-separated string
+	// Append the string to the errors slice
 	for _, e := range e.Errors {
 		errors = append(errors, strings.Join(e, ", "))
 	}
 
+	// Join the error messages with commas and add it to the errString variable
 	errString += strings.Join(errMessages, ", ")
 
+	// If there are errors in the errors slice
+	// Join them with a new line and add them to the errString variable
 	if len(errors) > 0 {
-		errString += "\n" + strings.Join(errors, "  \n")
+		errString += "\n" + strings.Join(errors, " \n")
 	}
 
 	return errString
