@@ -31,6 +31,7 @@ func UsingRetryPolicy(maxRetries int, minRetryDelaySecs int, maxRetryDelaySecs i
 			MinRetryDelay: time.Duration(minRetryDelaySecs) * time.Second,
 			MaxRetryDelay: time.Duration(maxRetryDelaySecs) * time.Second,
 		}
+
 		return nil
 	}
 }
@@ -38,6 +39,7 @@ func UsingRetryPolicy(maxRetries int, minRetryDelaySecs int, maxRetryDelaySecs i
 func UserAgent(userAgent string) Option {
 	return func(api *API) error {
 		api.UserAgent = userAgent
+
 		return nil
 	}
 }
@@ -45,13 +47,15 @@ func UserAgent(userAgent string) Option {
 func Debug(debug bool) Option {
 	return func(api *API) error {
 		api.Debug = debug
+
 		return nil
 	}
 }
 
-func (api *API) parseOptions(opts ...Option) error {
-	for _, option := range opts {
+func (api *API) parseOptions(options ...Option) error {
+	for _, option := range options {
 		err := option(api)
+
 		if err != nil {
 			return err
 		}
