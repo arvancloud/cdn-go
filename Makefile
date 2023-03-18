@@ -1,9 +1,28 @@
 GOCMD=go
 GOTEST=$(GOCMD) test
 EXPORT_RESULT?=FALSE
+SOURCES=$(shell find . -name '*.go' -not -name '*_test.go' -not -name "main.go")
+BIN_DIR:=bin
 
-.PHONY: goconvey test coverage help
+.PHONY: clean pre cli goconvey test coverage help
 .DEFAULT_GOAL := help
+
+##################################### Binary #####################################
+
+clean: ## Clean the bin directory
+	rm -rf $(BIN_DIR)
+	rm -f ./checkstyle-report.xml checkstyle-report.xml yamllint-checkstyle.xml
+
+pre: clean ## Create the bin directory
+	mkdir -p $(BIN_DIR)
+
+cli: pre $(BIN_DIR)/cdn ## Build the CLI binary
+
+$(BIN_DIR)/%: cmd $(SOURCES)
+	$(GOCMD) build -o $@ $</*.go
+
+$(BIN_DIR):
+	mkdir -p $@
 
 ##################################### Test #####################################
 
