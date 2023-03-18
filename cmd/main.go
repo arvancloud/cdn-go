@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 
 	arvancloud "github.com/arvancloud/cdn-go/pkg"
@@ -9,26 +10,31 @@ import (
 )
 
 var (
-	API_KEY = ""
-	ctx     = context.Background()
+	ctx = context.Background()
 )
 
 func main() {
-	API_KEY = os.Getenv("ARVANCLOUD_API_KEY")
+	api, err := arvancloud.New(
+		os.Getenv("ARVANCLOUD_API_KEY"),
+		arvancloud.Debug(false),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	app := gcli.NewApp()
 	app.Version = arvancloud.VERSION
 	app.Desc = "ArvanCloud CDN"
 
-	configureArgs(app)
+	configureArgs(app, api)
 
 	app.Run(nil)
 }
 
-func configureArgs(app *gcli.App) {
+func configureArgs(app *gcli.App, api *arvancloud.API) {
 	domainArg := &gcli.Argument{
 		Name:     "domain",
-		Desc:     "Your domain",
+		Desc:     "Your domain, is required",
 		Required: true,
 	}
 
@@ -39,7 +45,12 @@ func configureArgs(app *gcli.App) {
 		Desc:    "<info>Get</> a single DNS record",
 		Aliases: []string{"g"},
 		Func: func(cmd *gcli.Command, _ []string) error {
-			Get(ctx, cmd.Arg("domain").String(), cmd.Arg("id").String())
+			GetDNSRecord(
+				ctx,
+				api,
+				cmd.Arg("domain").String(),
+				cmd.Arg("id").String(),
+			)
 			return nil
 		},
 		Config: func(cmd *gcli.Command) {
@@ -48,7 +59,31 @@ func configureArgs(app *gcli.App) {
 		},
 	}
 
+	// List DNS records
+
+	listDNSRecord := &gcli.Command{
+		Name:    "list",
+		Desc:    "<info>List</> DNS records",
+		Aliases: []string{"ls"},
+		Func: func(cmd *gcli.Command, _ []string) error {
+			ListDNSRecords(
+				ctx,
+				api,
+				cmd.Arg("domain").String(),
+				cmd.Arg("page").Int(),
+				cmd.Arg("per-page").Int(),
+			)
+			return nil
+		},
+		Config: func(cmd *gcli.Command) {
+			cmd.AddArgument(domainArg)
+			cmd.AddArg("page", "The page number for pagination", false)
+			cmd.AddArg("per-page", "Number of records in each page", false)
+		},
+	}
+
 	app.Add(
 		getDNSRecord,
+		listDNSRecord,
 	)
 }
