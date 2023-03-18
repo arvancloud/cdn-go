@@ -64,7 +64,7 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 	listDNSRecord := &gcli.Command{
 		Name:    "list",
 		Desc:    "<info>List</> DNS records",
-		Aliases: []string{"ls"},
+		Aliases: []string{"l", "ls"},
 		Func: func(cmd *gcli.Command, _ []string) error {
 			ListDNSRecords(
 				ctx,
@@ -82,8 +82,30 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 		},
 	}
 
+	// Delete DNS record
+
+	deleteDNSRecord := &gcli.Command{
+		Name:    "delete",
+		Desc:    "<info>Delete</> a single DNS record",
+		Aliases: []string{"d", "del"},
+		Func: func(cmd *gcli.Command, _ []string) error {
+			DeleteDNSRecord(
+				ctx,
+				api,
+				cmd.Arg("domain").String(),
+				cmd.Arg("id").String(),
+			)
+			return nil
+		},
+		Config: func(cmd *gcli.Command) {
+			cmd.AddArgument(domainArg)
+			cmd.AddArg("id", "The id of DNS record, is required", true)
+		},
+	}
+
 	app.Add(
 		getDNSRecord,
 		listDNSRecord,
+		deleteDNSRecord,
 	)
 }

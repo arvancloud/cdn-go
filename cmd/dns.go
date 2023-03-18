@@ -38,3 +38,16 @@ func ListDNSRecords(ctx context.Context, api *arvancloud.API, domain string, pag
 
 	arvancloud.PrettyPrint(u)
 }
+
+func DeleteDNSRecord(ctx context.Context, api *arvancloud.API, domain string, id string) {
+	resource := arvancloud.Resource{
+		Domain: domain,
+	}
+
+	u, err := api.DeleteDNSRecord(ctx, resource, id)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	arvancloud.PrettyPrint(u)
+}
