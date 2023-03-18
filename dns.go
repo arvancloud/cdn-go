@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+// CreateDNSRecord will create a DNS record
+// ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.store
 func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, record CreateDNSRecordParams) (*CreateDNSRecord_Response, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
@@ -27,6 +29,8 @@ func (api *API) CreateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	return res, nil
 }
 
+// GetDNSRecord will return a single DNS record
+// ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.show
 func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DNSRecord, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
@@ -51,6 +55,8 @@ func (api *API) GetDNSRecord(ctx context.Context, rc ResourceContainer, recordID
 	return &res.Data, nil
 }
 
+// ListDNSRecords will list a part of DNS records
+// ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.list
 func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params ListDNSRecordsParams) ([]DNSRecord, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
@@ -75,6 +81,8 @@ func (api *API) ListDNSRecords(ctx context.Context, rc ResourceContainer, params
 	return listResponse.Data, nil
 }
 
+// UpdateDNSRecord will update a DNS record
+// ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.update
 func (api *API) UpdateDNSRecord(ctx context.Context, rc ResourceContainer, recordID string, params UpdateDNSRecordParams) (*UpdateDNSRecord_Response, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
@@ -99,6 +107,8 @@ func (api *API) UpdateDNSRecord(ctx context.Context, rc ResourceContainer, recor
 	return res, nil
 }
 
+// DeleteDNSRecord will delete a DNS record
+// ? Documentation: https://www.arvancloud.ir/api/cdn/4.0#tag/DNS-Management/operation/dns_records.remove
 func (api *API) DeleteDNSRecord(ctx context.Context, rc ResourceContainer, recordID string) (*DeleteDNSRecord_Response, error) {
 	if rc.Domain == "" {
 		return nil, ErrMissingDomain
