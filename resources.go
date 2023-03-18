@@ -1,5 +1,5 @@
 package arvancloud
 
-type ResourceContainer struct {
+type Resource struct {
 	Domain string
 }
