@@ -41,9 +41,10 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 	// Get DNS record
 
 	getDNSRecord := &gcli.Command{
-		Name:    "get",
-		Desc:    "<info>Get</> a single DNS record",
-		Aliases: []string{"g"},
+		Name:     "get",
+		Desc:     "<info>Get</> a single DNS record",
+		Aliases:  []string{"g"},
+		Examples: `{$fullCmd} <cyan>domain.ir</> <purple>4j6eff36-8e7b-4c12-a7d1-20804e839a67</>`,
 		Func: func(cmd *gcli.Command, _ []string) error {
 			GetDNSRecord(
 				ctx,
@@ -65,6 +66,9 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 		Name:    "list",
 		Desc:    "<info>List</> DNS records",
 		Aliases: []string{"l", "ls"},
+		Examples: `{$fullCmd} <cyan>domain.ir</>
+{$fullCmd} <cyan>domain.ir</> <purple>2</>
+{$fullCmd} <cyan>domain.ir</> <purple>1</> <green>2</>`,
 		Func: func(cmd *gcli.Command, _ []string) error {
 			ListDNSRecords(
 				ctx,
@@ -85,9 +89,10 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 	// Delete DNS record
 
 	deleteDNSRecord := &gcli.Command{
-		Name:    "delete",
-		Desc:    "<info>Delete</> a single DNS record",
-		Aliases: []string{"d", "del"},
+		Name:     "delete",
+		Desc:     "<info>Delete</> a single DNS record",
+		Aliases:  []string{"d", "del"},
+		Examples: `{$fullCmd} <cyan>domain.ir</> <purple>4j6eff36-8e7b-4c12-a7d1-20804e839a67</>`,
 		Func: func(cmd *gcli.Command, _ []string) error {
 			DeleteDNSRecord(
 				ctx,
