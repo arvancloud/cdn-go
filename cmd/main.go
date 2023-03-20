@@ -14,6 +14,7 @@ var (
 )
 
 func main() {
+	// Create a new instance of the API client
 	api, err := arvancloud.New(
 		os.Getenv("ARVANCLOUD_API_KEY"),
 		arvancloud.Debug(false),
@@ -22,10 +23,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Create a new instance of the CLI application
 	app := gcli.NewApp()
 	app.Version = arvancloud.VERSION
 	app.Desc = "ArvanCloud CDN"
 
+	// Configure CLI arguments
 	configureArgs(app, api)
 
 	app.Run(nil)
