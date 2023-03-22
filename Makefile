@@ -19,7 +19,7 @@ pre: clean ## Create the bin directory
 cli: pre $(BIN_DIR)/cdn ## Build the CLI binary
 
 $(BIN_DIR)/%: cmd $(SOURCES)
-	$(GOCMD) build -ldflags="-s -w" -o $@ $</*.go
+	CGO_ENABLED=0 $(GOCMD) build -ldflags="-s -w" -o $@ $</*.go
 
 $(BIN_DIR):
 	mkdir -p $@
