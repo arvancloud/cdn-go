@@ -84,10 +84,10 @@ func main() {
   - [ ] L4 Proxy
   - [ ] Rate Limit
 - [ ] Package
-  - [ ] CLI
+  - [x] CLI
   - [ ] Documentation
-  - [ ] Official Release
-  - [ ] CI/CD
+  - [x] Official Release
+  - [x] CI/CD
 
 ## Contributing
 
