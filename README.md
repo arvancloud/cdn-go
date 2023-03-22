@@ -84,7 +84,7 @@ func main() {
   - [ ] L4 Proxy
   - [ ] Rate Limit
 - [ ] Package
-  - [x] CLI
+  - [ ] CLI
   - [ ] Documentation
   - [ ] Official Release
   - [ ] CI/CD
