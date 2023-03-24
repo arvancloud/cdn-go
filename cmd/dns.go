@@ -9,6 +9,7 @@ import (
 	"github.com/gookit/gcli/v3/interact"
 )
 
+// List of functions for every DNS record type
 var funcs = map[string]func() interface{}{
 	"A":     createDNSRecord_A,
 	"AAAA":  createDNSRecord_AAAA,
@@ -87,6 +88,7 @@ func CreateDNSRecord(ctx context.Context, api *arvancloud.API, domain string, re
 	arvancloud.PrettyPrint(u)
 }
 
+// createDNSRecordParams will configure the parameters for creating a DNS record
 func createDNSRecordParams(params *arvancloud.CreateDNSRecordParams) {
 	recordName, _ := interact.ReadInput("Record name: ")
 	params.Name = recordName
@@ -148,10 +150,11 @@ func createDNSRecordParams(params *arvancloud.CreateDNSRecordParams) {
 	)
 	params.UpstreamHTTPS = recordUpstreamHTTPS
 
+	// Call function based on record type
 	if f, ok := funcs[recordType]; ok {
 		params.Value = f()
 	} else {
-		log.Fatal("Unknown function:", recordType)
+		log.Fatal("Unknown record type:", recordType)
 	}
 
 	params.IPFilterMode = createDNSRecord_IPFilterMode()
