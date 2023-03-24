@@ -41,6 +41,32 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 		Required: true,
 	}
 
+	// Create DNS record
+
+	createDNSRecord := &gcli.Command{
+		Name:    "create",
+		Desc:    "<info>Create</> a single DNS record",
+		Aliases: []string{"c"},
+		Func: func(cmd *gcli.Command, _ []string) error {
+			var params *arvancloud.CreateDNSRecordParams
+			params = new(arvancloud.CreateDNSRecordParams)
+
+			createDNSRecordParams(params)
+
+			CreateDNSRecord(
+				ctx,
+				api,
+				cmd.Arg("domain").String(),
+				params,
+			)
+
+			return nil
+		},
+		Config: func(cmd *gcli.Command) {
+			cmd.AddArgument(domainArg)
+		},
+	}
+
 	// Get DNS record
 
 	getDNSRecord := &gcli.Command{
@@ -112,6 +138,7 @@ func configureArgs(app *gcli.App, api *arvancloud.API) {
 	}
 
 	app.Add(
+		createDNSRecord,
 		getDNSRecord,
 		listDNSRecord,
 		deleteDNSRecord,
