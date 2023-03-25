@@ -42,7 +42,7 @@ jobs:
 
       - name: Generate builder values
         id: values
-        run: echo "::set-output name=binary-name::go-chat-${{ matrix.os }}-${{ matrix.arch }}`[ ${{ matrix.os }} = 'windows' ] && echo '.exe'`"
+        run: echo "::set-output name=binary-name::cdn-${{ matrix.os }}-${{ matrix.arch }}`[ ${{ matrix.os }} = 'windows' ] && echo '.exe'`"
 
       - name: Install Go dependencies
         run: go mod download
