@@ -18,9 +18,8 @@ ENV GOARCH $TARGETARCH
 
 RUN set -x \
     && go version \
-    && CGO_ENABLED=0 go build -trimpath -ldflags "$LDFLAGS" -o /src/cdn-uncompress cmd/*.go
-
-RUN apk add -U --no-cache ca-certificates
+    && CGO_ENABLED=0 go build -trimpath -ldflags "$LDFLAGS" -o /src/cdn-uncompress cmd/*.go \
+    && apk add -U --no-cache ca-certificates
 
 ##################################### Compression #####################################
 
