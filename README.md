@@ -1,5 +1,7 @@
 # ArvanCloud CDN Go
 
+[![Release](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml)
+
 ![logo](.github/logo.svg)
 
 It's a Go library for interacting with the ArvanCloud CDN API.
