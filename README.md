@@ -1,6 +1,6 @@
 # ArvanCloud CDN Go
 
-[![Release](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/r1cloud/cdn?sort=semver)
+[![Release](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml) [![CodeQL](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/r1cloud/cdn?sort=semver)
 
 ![logo](.github/logo.svg)
 
