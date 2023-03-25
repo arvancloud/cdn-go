@@ -20,6 +20,8 @@ RUN set -x \
     && go version \
     && CGO_ENABLED=0 go build -trimpath -ldflags "$LDFLAGS" -o /src/cdn-uncompress cmd/*.go
 
+RUN apk add -U --no-cache ca-certificates
+
 ##################################### Compression #####################################
 
 FROM hatamiarash7/upx:latest as upx
@@ -47,5 +49,7 @@ LABEL \
     org.opencontainers.image.licenses="MIT"
 
 COPY --from=upx /cdn /cdn
+
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 ENTRYPOINT ["/cdn"]
