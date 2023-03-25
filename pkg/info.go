@@ -14,5 +14,5 @@ const (
 	UA = "r1c-go"
 
 	// VERSION is the version of client
-	VERSION = "v0.1.0"
+	VERSION = "v0.1.3"
 )
