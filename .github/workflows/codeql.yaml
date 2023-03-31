@@ -2,15 +2,30 @@ name: CodeQL
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+    paths:
+      - cmd
+      - pkg
+      - go.mod
+      - go.sum
+      - .github/workflows/codeql.yaml
   pull_request:
-    branches: ["main"]
-  schedule:
-    - cron: "42 5 * * 1"
+    branches:
+      - main
+    paths:
+      - cmd
+      - pkg
+      - go.mod
+      - go.sum
+      - .github/workflows/codeql.yaml
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
 
 jobs:
   analyze:
     name: Analyze
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
     permissions:
       actions: read
