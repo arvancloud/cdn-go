@@ -41,16 +41,16 @@ func TestCreateDNSRecord(t *testing.T) {
 		},
 	}
 
-	handler := func(writer http.ResponseWriter, r *http.Request) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 
-		var v CreateDNSRecordParams
-		err := json.NewDecoder(r.Body).Decode(&v)
+		var p CreateDNSRecordParams
+		err := json.NewDecoder(r.Body).Decode(&p)
 		require.NoError(t, err)
-		assert.Equal(t, input, v)
+		assert.Equal(t, input, p)
 
-		writer.Header().Set("content-type", "application/json")
-		fmt.Fprint(writer, `{
+		w.Header().Set("content-type", "application/json")
+		fmt.Fprint(w, `{
 			"data": {
 				"id": "714009ff-a43c-43c5-80e2-0b3ffc1344a4",
 				"type": "a",
@@ -235,10 +235,10 @@ func TestUpdateDNSRecord(t *testing.T) {
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPut, r.Method, "Expected method 'PUT', got %s", r.Method)
 
-		var v UpdateDNSRecordParams
-		err := json.NewDecoder(r.Body).Decode(&v)
+		var p UpdateDNSRecordParams
+		err := json.NewDecoder(r.Body).Decode(&p)
 		require.NoError(t, err)
-		assert.Equal(t, input, v)
+		assert.Equal(t, input, p)
 
 		w.Header().Set("content-type", "application/json")
 		fmt.Fprint(w, `{
