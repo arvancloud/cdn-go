@@ -289,7 +289,7 @@ func TestListDNSRecords(t *testing.T) {
 				"links": [
 					{
 						"url": null,
-						"label": "&laquo; Previous",
+						"label": "Previous",
 						"active": false
 					},
 					{
@@ -299,7 +299,7 @@ func TestListDNSRecords(t *testing.T) {
 					},
 					{
 						"url": null,
-						"label": "Next &raquo;",
+						"label": "Next",
 						"active": false
 					}
 				],
