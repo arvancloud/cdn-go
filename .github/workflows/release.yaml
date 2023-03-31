@@ -56,7 +56,13 @@ jobs:
         run: go build -trimpath -ldflags "$LDFLAGS" -o "./${{ steps.values.outputs.binary-name }}" cmd/*.go
 
       - name: Test
-        run: go test -v -race ./...
+        run: go test -v -race ./... -json > TestResults.json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-results
+          path: TestResults.json
 
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v2
