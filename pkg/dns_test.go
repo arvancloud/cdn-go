@@ -306,3 +306,36 @@ func TestUpdateDNSRecord(t *testing.T) {
 
 	assert.Equal(t, want, actual)
 }
+
+func TestDeleteDNSRecord(t *testing.T) {
+	setup()
+	defer teardown()
+
+	recordID := "714009ff-a43c-43c5-80e2-0b3ffc1344a4"
+
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodDelete, r.Method, "Expected method 'DELETE', got %s", r.Method)
+
+		w.Header().Set("content-type", "application/json")
+		fmt.Fprint(w, `{
+			"message": "DNS record deleted"
+		}`)
+	}
+
+	mux.HandleFunc("/domains/"+testDomain+"/dns-records/"+recordID, handler)
+
+	want := &DeleteDNSRecord_Response{
+		Message: "DNS record deleted",
+	}
+
+	_, err := client.DeleteDNSRecord(context.Background(), ResourceDomain(""), recordID)
+	assert.ErrorIs(t, err, ErrMissingDomain)
+
+	_, err = client.DeleteDNSRecord(context.Background(), ResourceDomain(testDomain), "")
+	assert.ErrorIs(t, err, ErrMissingDNSRecordID)
+
+	actual, err := client.DeleteDNSRecord(context.Background(), ResourceDomain(testDomain), recordID)
+	require.NoError(t, err)
+
+	assert.Equal(t, want, actual)
+}
