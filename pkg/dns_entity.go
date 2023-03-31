@@ -2,19 +2,17 @@ package arvancloud
 
 // DSNRecord is a DSN record structure for a domain
 type DNSRecord struct {
-	ID               string      `json:"id,omitempty"`
-	Type             string      `json:"type,omitempty"`
-	Name             string      `json:"name,omitempty"`
-	Value            interface{} `json:"value,omitempty"`
-	TTL              int         `json:"ttl,omitempty"`
-	Cloud            bool        `json:"cloud,omitempty"`
-	UpstreamHTTPS    string      `json:"upstream_https,omitempty"`
-	IPFilterMode     interface{} `json:"ip_filter_mode,omitempty"`
-	IsProtected      bool        `json:"is_protected,omitempty"`
-	CreatedAt        string      `json:"created_at,omitempty"`
-	UpdatedAt        string      `json:"updated_at,omitempty"`
-	MonitoringStatus string      `json:"monitoring_status,omitempty"`
-	HealthCheck      interface{} `json:"health_check,omitempty"`
+	ID            string      `json:"id,omitempty"`
+	Type          string      `json:"type,omitempty"`
+	Name          string      `json:"name,omitempty"`
+	Value         interface{} `json:"value,omitempty"`
+	TTL           int         `json:"ttl,omitempty"`
+	Cloud         bool        `json:"cloud,omitempty"`
+	UpstreamHTTPS string      `json:"upstream_https,omitempty"`
+	IPFilterMode  interface{} `json:"ip_filter_mode,omitempty"`
+	IsProtected   bool        `json:"is_protected,omitempty"`
+	CreatedAt     string      `json:"created_at,omitempty"`
+	UpdatedAt     string      `json:"updated_at,omitempty"`
 }
 
 // DNSRecord_Response is response structure contains

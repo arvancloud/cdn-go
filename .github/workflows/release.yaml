@@ -47,13 +47,22 @@ jobs:
       - name: Install Go dependencies
         run: go mod download
 
-      - name: Build application
+      - name: Build
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
           CGO_ENABLED: 0
           LDFLAGS: -s -w -X github.com/arvancloud/cdn-go/internal/pkg/version.version=${{ steps.slug.outputs.version }}
         run: go build -trimpath -ldflags "$LDFLAGS" -o "./${{ steps.values.outputs.binary-name }}" cmd/*.go
+
+      - name: Test
+        run: go test -v -race ./... -json > TestResults.json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-results
+          path: TestResults.json
 
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v2
@@ -63,7 +72,7 @@ jobs:
             ./${{ steps.values.outputs.binary-name }}
           args: --best --lzma
 
-      - name: Upload binaries to release
+      - name: Upload binaries
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
@@ -99,7 +108,7 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-      - name: Build & Push Docker image
+      - name: Build & Push image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -113,7 +122,7 @@ jobs:
             r1cloud/cdn:${{ steps.slug.outputs.version }}
             r1cloud/cdn:latest
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: r1cloud/cdn:latest
@@ -125,7 +134,7 @@ jobs:
           template: "@/contrib/sarif.tpl"
           output: "trivy-results.sarif"
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: "trivy-results.sarif"

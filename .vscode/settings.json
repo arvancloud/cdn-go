@@ -1,3 +1,13 @@
 {
-  "cSpell.words": ["ANAME", "gcli", "gookit", "iodef", "issuewild", "TLSA"]
+  "cSpell.words": [
+    "ANAME",
+    "backoff",
+    "gcli",
+    "gookit",
+    "iodef",
+    "issuewild",
+    "stretchr",
+    "TLSA",
+    "unmarshalling"
+  ]
 }
