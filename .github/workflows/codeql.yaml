@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: CodeQL
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       security-events: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Initialize CodeQL
@@ -26,10 +26,13 @@ jobs:
         with:
           languages: "go"
 
-      - name: Build code
+      - name: Build
         run: make cli
 
-      - name: Perform CodeQL Analysis
+      - name: Test
+        run: go test -v -race ./...
+
+      - name: CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:go"
