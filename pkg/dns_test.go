@@ -199,3 +199,110 @@ func TestGetDNSRecord(t *testing.T) {
 
 	assert.Equal(t, want, actual)
 }
+
+func TestUpdateDNSRecord(t *testing.T) {
+	setup()
+	defer teardown()
+
+	recordID := "714009ff-a43c-43c5-80e2-0b3ffc1344a4"
+
+	input := UpdateDNSRecordParams{
+		Type: "a",
+		Name: "@",
+		Value: []interface{}{
+			map[string]interface{}{
+				"ip":      "1.2.3.5",
+				"port":    2.0,
+				"weight":  20.0,
+				"country": "",
+			},
+			map[string]interface{}{
+				"ip":      "5.6.7.9",
+				"port":    3.0,
+				"weight":  30.0,
+				"country": "",
+			},
+		},
+		TTL:           180,
+		UpstreamHTTPS: "http",
+		IPFilterMode: map[string]interface{}{
+			"count":      "multi",
+			"order":      "weighted",
+			"geo_filter": "none",
+		},
+	}
+
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPut, r.Method, "Expected method 'PUT', got %s", r.Method)
+
+		var v UpdateDNSRecordParams
+		err := json.NewDecoder(r.Body).Decode(&v)
+		require.NoError(t, err)
+		assert.Equal(t, input, v)
+
+		w.Header().Set("content-type", "application/json")
+		fmt.Fprint(w, `{
+			"data": {
+				"id": "714009ff-a43c-43c5-80e2-0b3ffc1344a4",
+				"type": "a",
+				"name": "@",
+				"value": [
+					{
+						"ip": "1.2.3.5",
+						"port": 2,
+						"weight": 20,
+						"country": ""
+					},
+					{
+						"ip": "5.6.7.9",
+						"port": 3,
+						"weight": 30,
+						"country": ""
+					}
+				],
+				"ttl": 180,
+				"cloud": false,
+				"upstream_https": "http",
+				"ip_filter_mode": {
+					"count": "multi",
+					"order": "weighted",
+					"geo_filter": "none"
+				},
+				"is_protected": false,
+				"created_at": "2023-03-31T08:57:51+00:00",
+				"updated_at": "2023-03-31T15:41:26+00:00"
+			},
+			"message": "DNS record updated"
+		}`)
+	}
+
+	mux.HandleFunc("/domains/"+testDomain+"/dns-records/"+recordID, handler)
+
+	want := &UpdateDNSRecord_Response{
+		Data: map[string]interface{}{
+			"id":             recordID,
+			"type":           input.Type,
+			"name":           input.Name,
+			"value":          input.Value,
+			"ttl":            float64(input.TTL),
+			"cloud":          false,
+			"upstream_https": input.UpstreamHTTPS,
+			"ip_filter_mode": input.IPFilterMode,
+			"is_protected":   false,
+			"created_at":     "2023-03-31T08:57:51+00:00",
+			"updated_at":     "2023-03-31T15:41:26+00:00",
+		},
+		Message: "DNS record updated",
+	}
+
+	_, err := client.UpdateDNSRecord(context.Background(), ResourceDomain(""), recordID, UpdateDNSRecordParams{})
+	assert.ErrorIs(t, err, ErrMissingDomain)
+
+	_, err = client.UpdateDNSRecord(context.Background(), ResourceDomain(testDomain), "", UpdateDNSRecordParams{})
+	assert.ErrorIs(t, err, ErrMissingDNSRecordID)
+
+	actual, err := client.UpdateDNSRecord(context.Background(), ResourceDomain(testDomain), recordID, input)
+	require.NoError(t, err)
+
+	assert.Equal(t, want, actual)
+}
