@@ -55,6 +55,9 @@ jobs:
           LDFLAGS: -s -w -X github.com/arvancloud/cdn-go/internal/pkg/version.version=${{ steps.slug.outputs.version }}
         run: go build -trimpath -ldflags "$LDFLAGS" -o "./${{ steps.values.outputs.binary-name }}" cmd/*.go
 
+      - name: Test
+        run: go test -v -race ./...
+
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v2
         with:
