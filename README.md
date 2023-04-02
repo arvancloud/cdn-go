@@ -1,6 +1,6 @@
 # ArvanCloud CDN Go
 
-[![Release](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml) [![CodeQL](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/r1cloud/cdn?sort=semver)
+[![Release](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/release.yaml) [![CodeQL](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml/badge.svg)](https://github.com/arvancloud/cdn-go/actions/workflows/codeql.yaml) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/r1cloud/cdn?sort=semver) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/arvancloud/cdn-go) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/arvancloud/cdn-go?display_name=tag&label=version&sort=semver)
 
 ![logo](.github/logo.svg)
 
@@ -45,14 +45,14 @@ func main() {
 
     record := arvancloud.CreateDNSRecordParams{
         Type: "A",
-        Name: "C",
+        Name: "@",
         Value: []arvancloud.DNSRecord_Value_A{
             {
                 IP: "1.1.1.1",
             },
         },
         TTL:           120,
-        UpstreamHTTPS: "default",
+        UpstreamHTTPS: "https",
         IPFilterMode: arvancloud.DNSRecord_IPFilterMode{
             Count:     "single",
             Order:     "none",
@@ -69,7 +69,7 @@ func main() {
 }
 ```
 
-## Features
+## Roadmap
 
 - [ ] Products
   - [x] DNS
@@ -85,9 +85,8 @@ func main() {
   - [ ] Log Forwarder
   - [ ] L4 Proxy
   - [ ] Rate Limit
-- [ ] Package
+- [x] Package
   - [x] CLI
-  - [ ] Documentation
   - [x] Official Release
   - [x] CI/CD
 
