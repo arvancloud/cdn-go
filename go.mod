@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/google/go-querystring v1.1.0
 	github.com/gookit/gcli/v3 v3.2.1
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	golang.org/x/time v0.3.0
 )
 
